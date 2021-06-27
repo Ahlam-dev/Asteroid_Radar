@@ -23,6 +23,10 @@
         <argument
             android:name="selectedAsteroid"
             app:argType="com.udacity.asteroidradar.Asteroid"/>
+        <action
+            android:id="@+id/action_detailFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment" />
     </fragment>
 
 </navigation>

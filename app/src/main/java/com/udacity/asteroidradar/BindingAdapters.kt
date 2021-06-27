@@ -20,8 +20,11 @@ fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
 fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.asteroid_hazardous)
+        imageView.contentDescription=R.string.potentially_hazardous_asteroid_image.toString()
     } else {
         imageView.setImageResource(R.drawable.asteroid_safe)
+        imageView.contentDescription=R.string.not_hazardous_asteroid_image.toString()
+
     }
 }
 
@@ -52,6 +55,11 @@ fun bindRecyclerView(recyclerView:RecyclerView, list:List<Asteroid>?){
 
 @BindingAdapter("NasaImage")
 fun bindImageOftheDay(imageView: ImageView,pictureOfDay: PictureOfDay?){
-
-    Picasso.with(imageView.context).load(pictureOfDay?.url).into(imageView)
+    if(pictureOfDay!=null)
+    {
+        Picasso.with(imageView.context).load(pictureOfDay.url)
+            .placeholder(R.drawable.placeholder_picture_of_day)
+            .into(imageView)}
+    else
+        imageView.setImageResource(R.drawable.placeholder_picture_of_day)
 }

@@ -1,12 +1,19 @@
 package com.udacity.asteroidradar.main
 
+import android.app.SearchManager
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.detail.DetailFragment
+
 
 class MainFragment : Fragment() {
 
@@ -14,17 +21,30 @@ class MainFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onViewCreated()"
         }
-         ViewModelProvider(this, MainViewModel.Factory(activity.application)).get(MainViewModel::class.java)
+        ViewModelProvider(
+            this,
+            MainViewModel.Factory(activity.application)
+        ).get(MainViewModel::class.java)
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = FragmentMainBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
-        binding.asteroidRecycler.adapter=AsteroidAdapter()
+        binding.asteroidRecycler.adapter = AsteroidAdapter(onClickListner {
+            viewModel.displayDetails(it)
+        })
+        viewModel.navigateToSelectedAsteroid.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
+                viewModel.doneDisplayDetail()
+            }
+        })
 
 
 
@@ -39,6 +59,14 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return true
+
+            viewModel.updateFilter(
+                when (item.itemId) {
+                    R.id.show_saved_menu -> AsteroidListOptions.Show_saved
+                    R.id.show_today_menu -> AsteroidListOptions.Show_today
+                    else -> AsteroidListOptions.Show_week
+                }
+            )
+            return true
     }
 }

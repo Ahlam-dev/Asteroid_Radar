@@ -12,8 +12,7 @@
         android:id="@+id/asteroid_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#B34242"
-        android:backgroundTint="@android:color/holo_blue_bright">
+        android:backgroundTint="@android:color/transparent">
 
         <TextView
             android:id="@+id/name"
@@ -61,6 +60,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.485"
             app:srcCompat="@drawable/ic_status_normal"
+            android:contentDescription="Asteroid Status Icon "
             app:statusIcon="@{asteroid.potentiallyHazardous}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
